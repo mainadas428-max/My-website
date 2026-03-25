@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoltRush GOD LEVEL</title>
+
+<style>
+body {
+  margin:0;
+  font-family:sans-serif;
+  background:#0a0a0a;
+  color:white;
+}
+
+/* LOADER */
+#loader {
+  position:fixed;
+  width:100%;height:100%;
+  background:black;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+}
+
+/* NAVBAR */
+header {
+  position:sticky;
+  top:0;
+  display:flex;
+  justify-content:space-between;
+  padding:15px;
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(10px);
+}
+
+/* HERO */
+.hero {
+  text-align:center;
+  padding:50px 20px;
+  animation:fade 2s;
+}
+@keyframes fade {
+  from{opacity:0} to{opacity:1}
+}
+
+/* SEARCH */
+.search {
+  padding:10px;
+  margin:10px;
+  width:90%;
+}
+
+/* GRID */
+.grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  padding:10px;
+}
+
+.card {
+  background:#111;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.card img {
+  width:100%;
+  height:120px;
+  object-fit:cover;
+}
+
+button {
+  width:100%;
+  padding:8px;
+  background:orange;
+  border:none;
+  margin-top:5px;
+}
+
+/* CART */
+.cart {
+  position:fixed;
+  right:-100%;
+  top:0;
+  width:80%;
+  height:100%;
+  background:#111;
+  padding:15px;
+  transition:0.3s;
+}
+.cart.active {right:0}
+
+/* MODAL */
+.modal {
+  display:none;
+  position:fixed;
+  width:100%;height:100%;
+  background:rgba(0,0,0,0.8);
+  justify-content:center;
+  align-items:center;
+}
+.box {
+  background:#222;
+  padding:20px;
+  width:90%;
+}
+</style>
+</head>
+
+<body>
+
+<div id="loader">⚡ Loading...</div>
+
+<header>
+<span>⚡ VoltRush</span>
+<button onclick="toggleCart()">🛒 <span id="count">0</span></button>
+</header>
+
+<section class="hero">
+<h1>Ultimate Energy</h1>
+<p>Feel the power</p>
+</section>
+
+<input class="search" placeholder="Search drink..." onkeyup="searchProduct(this.value)">
+
+<section class="grid" id="grid"></section>
+
+<!-- CART -->
+<div class="cart" id="cart">
+<h2>Cart</h2>
+<ul id="items"></ul>
+<h3>Total: ₹<span id="total">0</span></h3>
+<button onclick="checkout()">Checkout</button>
+</div>
+
+<!-- PAYMENT -->
+<div class="modal" id="pay">
+<div class="box">
+<h2>Payment</h2>
+<input placeholder="Card Number">
+<input placeholder="Expiry">
+<input placeholder="CVV">
+<button onclick="success()">Pay</button>
+</div>
+</div>
+
+<script>
+let products = [
+{name:"Thunder",price:120,img:"https://images.unsplash.com/photo-1582719478250"},
+{name:"Zero",price:130,img:"https://images.unsplash.com/photo-1622484212850"},
+{name:"Fruit",price:150,img:"https://images.unsplash.com/photo-1604908176997"},
+{name:"Max",price:180,img:"https://images.unsplash.com/photo-1590080875515"}
+];
+
+let cart=[], total=0;
+
+/* LOAD PRODUCTS */
+function display(list){
+  let grid=document.getElementById("grid");
+  grid.innerHTML="";
+  list.forEach(p=>{
+    grid.innerHTML+=`
+    <div class="card">
+    <img src="${p.img}">
+    <h3>${p.name}</h3>
+    <p>₹${p.price}</p>
+    <button onclick="add('${p.name}',${p.price})">Add</button>
+    </div>`;
+  });
+}
+display(products);
+
+/* SEARCH */
+function searchProduct(val){
+  let filtered=products.filter(p=>p.name.toLowerCase().includes(val.toLowerCase()));
+  display(filtered);
+}
+
+/* CART */
+function add(name,price){
+  cart.push(name);
+  total+=price;
+  document.getElementById("count").innerText=cart.length;
+  document.getElementById("total").innerText=total;
+
+  let li=document.createElement("li");
+  li.innerText=name+" ₹"+price;
+  document.getElementById("items").appendChild(li);
+}
+
+function toggleCart(){
+  document.getElementById("cart").classList.toggle("active");
+}
+
+/* CHECKOUT */
+function checkout(){
+  document.getElementById("pay").style.display="flex";
+}
+
+/* SUCCESS */
+function success(){
+  alert("🎉 Order Successful");
+  location.reload();
+}
+
+/* LOADER */
+setTimeout(()=>document.getElementById("loader").style.display="none",1500);
+</script>
+
+</body>
+</html>
